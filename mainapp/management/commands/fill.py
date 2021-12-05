@@ -1,7 +1,10 @@
 from django.core.management import BaseCommand
-from mainapp.models import ProductCategory, Product,Contacts
+
+from authapp.models import ShopUser
+from mainapp.models import ProductCategory, Product
 from django.conf import settings
 import json
+
 
 
 def load_from_json(file_name):
@@ -28,4 +31,10 @@ class Command(BaseCommand):
 
             Product.objects.create(**prod)
 
+
+        shop_admin = ShopUser.objects.create_superuser(
+            username='django',
+            password='geekbrains',
+            email='admin@gb.local'
+        )
 
