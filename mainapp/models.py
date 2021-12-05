@@ -1,5 +1,5 @@
 from django.db import models
-
+# verbose_name  нужен для того, чтобы наши названия подтянулись в админку
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=64, unique=True, verbose_name='Название')
@@ -7,6 +7,10 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
 
 
 class Product(models.Model):
@@ -20,3 +24,7 @@ class Product(models.Model):
 
     def __str__(self):
         return f'{self.name} ({self.category})'
+
+    class Meta:
+        verbose_name = 'продукт'
+        verbose_name_plural = 'продукты'
