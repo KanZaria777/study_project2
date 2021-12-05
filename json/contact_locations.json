@@ -1,0 +1,20 @@
+[
+  {
+    "city": "Нарния",
+    "phone": "8 800 555 3535",
+    "email": "narnia@magic.com",
+    "address": "Северная часть королевства."
+  },
+  {
+    "city": "Неверлэнд",
+    "phone": "8 000 007 7700",
+    "email": "neverland@magic.com",
+    "address": "Весь остров."
+  },
+  {
+    "city": "Джуманджи",
+    "phone": "8 111 117 7711",
+    "email": "game_world@magic.com",
+    "address": "Тут всё не однозначно."
+  }
+]
