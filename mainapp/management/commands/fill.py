@@ -28,7 +28,4 @@ class Command(BaseCommand):
 
             Product.objects.create(**prod)
 
-        contacts = load_from_json('contact_locations')
-        Contacts.objects.all().delete()
-        for cont in contacts:
-            Contacts.objects.create(**cont)
+

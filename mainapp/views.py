@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from mainapp.models import Product, ProductCategory, Contacts
+from mainapp.models import Product, ProductCategory
 
 
 def index(request):
@@ -12,11 +12,7 @@ def index(request):
 
 
 def contact(request):
-    list_contacts = Contacts.objects.all()[:3]
-    context = {
-        'contacts': list_contacts,
-    }
-    return render(request, 'mainapp/contact.html', context)
+    return render(request, 'mainapp/contact.html')
 
 
 def products(request, pk=None):
