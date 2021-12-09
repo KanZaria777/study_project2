@@ -1,4 +1,6 @@
 from django.db import models
+# from phonenumber_field.modelfields import PhoneNumberField
+# говорят хорошая библеотка,но не хочется сильно париться
 # verbose_name  нужен для того, чтобы наши названия подтянулись в админку
 
 class ProductCategory(models.Model):

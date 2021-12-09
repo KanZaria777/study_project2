@@ -10,8 +10,10 @@ def index(request):
     }
     return render(request, 'mainapp/index.html', context)
 
+
 def contact(request):
     return render(request, 'mainapp/contact.html')
+
 
 def products(request, pk=None):
     links_menu = ProductCategory.objects.all()
@@ -19,6 +21,3 @@ def products(request, pk=None):
         'links_menu': links_menu,
     }
     return render(request, 'mainapp/products.html', context)
-
-
-
