@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+
+from basketapp.models import Basket
 from mainapp.models import Product, ProductCategory
 
 
@@ -29,12 +31,17 @@ def products(request, pk=None):
         context = {
             'links_menu': links_menu,
             'products': products_list,
-            'category': category_item
+            'category': category_item,
+            'basket': Basket.objects.filter(user=request.user)
         }
 
         return render(request, 'mainapp/products_list.html', context)
 
     context = {
         'links_menu': links_menu,
+        'title': 'Товары',
+        'hot_product': Product.objects.all().first(),
+        'same_products': Product.objects.all()[3:5],
+        'basket': sum(list(Basket.objects.filter(user=request.user).values_list('quantity', flat=True)))
     }
     return render(request, 'mainapp/products.html', context)
