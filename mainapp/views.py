@@ -1,3 +1,6 @@
+import json
+
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 
 from basketapp.models import Basket
@@ -8,13 +11,19 @@ def index(request):
     products_list = Product.objects.all()[:4]
     print(products_list.query)
     context = {
-        'products': products_list
+        'products': products_list,
+        'basket': Basket.objects.filter(user=request.user)
     }
     return render(request, 'mainapp/index.html', context)
 
 
 def contact(request):
-    return render(request, 'mainapp/contact.html')
+    with open(f'{settings.BASE_DIR}/contacts.json') as contacts_file:
+        context = {
+            'contacts': json.load(contacts_file),
+            'basket': Basket.objects.filter(user=request.user)
+        }
+    return render(request, 'mainapp/contact.html', context)
 
 
 def products(request, pk=None):
@@ -42,6 +51,6 @@ def products(request, pk=None):
         'title': 'Товары',
         'hot_product': Product.objects.all().first(),
         'same_products': Product.objects.all()[3:5],
-        'basket': sum(list(Basket.objects.filter(user=request.user).values_list('quantity', flat=True)))
+        'basket': Basket.objects.filter(user=request.user)
     }
     return render(request, 'mainapp/products.html', context)
