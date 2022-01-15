@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from adminapp.forms import ShopUserAdminEditForm, ProductCategoryForm, ProductForm
 from authapp.forms import ShopUserRegisterForm
@@ -27,6 +27,9 @@ class UsersListView(ListView):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    # def get_queryset(self):
+        # return ShopUser.objects.filter(is_superuser=False)
 
 @user_passes_test(lambda u: u.is_superuser)
 def user_create(request):
@@ -152,6 +155,12 @@ class ProductCategoryDeleteView(DeleteView):
     template_name = 'adminapp/category_delete.html'
     success_url = reverse_lazy('adminapp:categories')
 
+    def delete(self, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.success_url)
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def products(request, pk):
@@ -164,6 +173,7 @@ def products(request, pk):
     return render(request, 'adminapp/products_list.html', context)
 
 
+'''
 @user_passes_test(lambda u: u.is_superuser)
 def product_create(request, pk):
     category_item = get_object_or_404(ProductCategory, pk=pk)
@@ -181,7 +191,28 @@ def product_create(request, pk):
     }
 
     return render(request, 'adminapp/product_form.html', context)
+'''
 
+
+class ProductCreateView(CreateView):
+    model = Product
+    template_name = 'adminapp/product_form.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('adminapp:categories')
+
+    def _get_category(self):
+        category_id = self.kwargs.get('pk')
+        category_item = get_object_or_404(ProductCategory, pk=category_id)
+        return category_item
+
+    def get_success_url(self):
+        return reverse('adminapp:products', args=[self._get_category().pk])
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.request.method == 'POST':
+            context_data['category'] = self._get_category()
+        return context_data
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -218,6 +249,7 @@ def product_delete(request, pk):
     return render(request, 'adminapp/product_delete.html', context)
 
 
+'''
 @user_passes_test(lambda u: u.is_superuser)
 def product_read(request, pk):
     product_item = get_object_or_404(Product, pk=pk)
@@ -225,3 +257,9 @@ def product_read(request, pk):
         'object': product_item
     }
     return render(request, 'adminapp/product_read.html', context)
+'''
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'adminapp/product_read.html'
